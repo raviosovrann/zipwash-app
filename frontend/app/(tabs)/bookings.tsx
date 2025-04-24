@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Clock, CheckCircle } from 'lucide-react-native';
@@ -78,25 +78,29 @@ export default function BookingsScreen() {
         </TouchableOpacity>
       </View>
 
-      <ScrollView 
-        style={styles.bookingsContainer}
-        contentContainerStyle={styles.bookingsContent}
-        showsVerticalScrollIndicator={false}>
-        {filteredBookings.length > 0 ? (
-          filteredBookings.map(booking => (
-            <BookingCard 
-              key={booking.id} 
-              booking={{
-                ...booking,
-                status: booking.status as "upcoming" | "completed" | "cancelled"
-              }} />
-          ))
-        ) : (
+      <FlatList
+        data={filteredBookings}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <BookingCard
+            booking={{
+              ...item,
+              status: item.status as "upcoming" | "completed" | "cancelled"
+            }}
+          />
+        )}
+        ListEmptyComponent={
           <View style={styles.emptyState}>
             <Text style={styles.emptyStateText}>No {activeTab} bookings</Text>
           </View>
-        )}
-      </ScrollView>
+        }
+        style={styles.bookingsContainer}
+        contentContainerStyle={[
+          styles.bookingsContent,
+          filteredBookings.length === 0 && styles.emptyStateContainer
+        ]}
+        showsVerticalScrollIndicator={false}
+      />
     </SafeAreaView>
   );
 }
@@ -164,5 +168,9 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Medium',
     fontSize: 16,
     color: theme.colors.gray[500],
+  },
+  emptyStateContainer: {
+    flex: 1,
+    justifyContent: 'center',
   },
 });

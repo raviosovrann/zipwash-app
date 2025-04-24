@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, FlatList } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -10,22 +10,34 @@ import ServiceCategories from '@/components/home/ServiceCategories';
 import PopularProviders from '@/components/home/PopularProviders';
 
 export default function HomeScreen() {
+  // Create a dummy data array with one item to render our content
+  const dummyData = [{ id: 'main-content' }];
+
   return (
     <SafeAreaView style={styles.container} edges={['right', 'left']}>
       <StatusBar style="light" />
       <Header />
-      <ScrollView 
-        style={styles.scrollView} 
+      <FlatList
+        data={dummyData}
+        keyExtractor={item => item.id}
+        renderItem={() => (
+          <View>
+            <ServiceCategories />
+            <PopularProviders />
+          </View>
+        )}
+        ListHeaderComponent={() => (
+          <>
+            <View style={styles.searchContainer}>
+              <SearchBar />
+            </View>
+            <Promotions />
+          </>
+        )}
+        style={styles.scrollView}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.contentContainer}
-      >
-        <View style={styles.searchContainer}>
-          <SearchBar />
-        </View>
-        <Promotions />
-        <ServiceCategories />
-        <PopularProviders />
-      </ScrollView>
+      />
     </SafeAreaView>
   );
 }
