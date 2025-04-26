@@ -1,9 +1,17 @@
-import { Tabs } from 'expo-router';
-import { StyleSheet } from 'react-native';
-import { Home, Search, CalendarCheck, User } from 'lucide-react-native';
-import { theme } from '@/constants/Theme';
+import { Tabs } from "expo-router";
+import { StyleSheet } from "react-native";
+import { Home, Search, CalendarCheck, User } from "lucide-react-native";
+import { theme } from "@/constants/Theme";
+import { Redirect } from "expo-router";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function TabLayout() {
+  const { isAuthenticated } = useAuth();
+
+  if (!isAuthenticated) {
+    return <Redirect href="/login" />;
+  }
+
   return (
     <Tabs
       screenOptions={{
@@ -12,32 +20,35 @@ export default function TabLayout() {
         tabBarStyle: styles.tabBar,
         tabBarLabelStyle: styles.tabBarLabel,
         headerShown: false,
-      }}>
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: "Home",
           tabBarIcon: ({ color, size }) => <Home size={size} color={color} />,
         }}
       />
       <Tabs.Screen
         name="services"
         options={{
-          title: 'Services',
+          title: "Services",
           tabBarIcon: ({ color, size }) => <Search size={size} color={color} />,
         }}
       />
       <Tabs.Screen
         name="bookings"
         options={{
-          title: 'Bookings',
-          tabBarIcon: ({ color, size }) => <CalendarCheck size={size} color={color} />,
+          title: "Bookings",
+          tabBarIcon: ({ color, size }) => (
+            <CalendarCheck size={size} color={color} />
+          ),
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'Profile',
+          title: "Profile",
           tabBarIcon: ({ color, size }) => <User size={size} color={color} />,
         }}
       />
@@ -54,7 +65,7 @@ const styles = StyleSheet.create({
     borderTopColor: theme.colors.gray[200],
   },
   tabBarLabel: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: "Poppins-Regular",
     fontSize: 12,
   },
 });
