@@ -156,6 +156,7 @@ const styles = StyleSheet.create({
   },
   categoryContainer: {
     flexDirection: "row",
+    maxHeight: 100,
     paddingVertical: 16,
     paddingHorizontal: 20,
   },

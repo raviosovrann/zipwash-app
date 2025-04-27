@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: 100,
-    height: 160,
+    height: "100%",
     resizeMode: "cover",
   },
   content: {
