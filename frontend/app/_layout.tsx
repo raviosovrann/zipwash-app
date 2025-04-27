@@ -60,8 +60,9 @@ function RootLayoutNav() {
             <Stack.Screen name="signup" />
           </>
         )}
+
+        <StatusBar style="dark" />
       </Stack>
-      <StatusBar style="dark" />
     </>
   );
 }

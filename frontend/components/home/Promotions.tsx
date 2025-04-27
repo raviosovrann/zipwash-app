@@ -1,55 +1,65 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, FlatList } from 'react-native';
-import { theme } from '@/constants/Theme';
-import Animated, { FadeInRight, FadeOutLeft } from 'react-native-reanimated';
+import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  FlatList,
+} from "react-native";
+import { theme } from "@/constants/Theme";
+import Animated, { FadeInRight, FadeOutLeft } from "react-native-reanimated";
 
 const promotions = [
   {
-    id: '1',
-    title: 'Get Special Offer',
-    discount: '20%',
-    description: 'All Servicing Services Available',
-    validUntil: '31 August',
-    backgroundColor: '#000000',
+    id: "1",
+    title: "Get Special Offer",
+    discount: "20%",
+    description: "All Servicing Services Available",
+    validUntil: "31 August",
+    backgroundColor: "#000000",
   },
   {
-    id: '2',
-    title: 'Summer Deal',
-    discount: '15%',
-    description: 'AC Repair & Maintenance',
-    validUntil: '15 July',
-    backgroundColor: '#4C2E9B',
+    id: "2",
+    title: "Summer Deal",
+    discount: "15%",
+    description: "AC Repair & Maintenance",
+    validUntil: "15 July",
+    backgroundColor: "#4C2E9B",
   },
   {
-    id: '3',
-    title: 'Weekend Special',
-    discount: '25%',
-    description: 'Tire & Wheel Services',
-    validUntil: '30 June',
-    backgroundColor: '#2E4C9B',
+    id: "3",
+    title: "Weekend Special",
+    discount: "25%",
+    description: "Tire & Wheel Services",
+    validUntil: "30 June",
+    backgroundColor: "#2E4C9B",
   },
 ];
 
 export default function Promotions() {
-  const renderPromotionItem = ({ item }: { item: typeof promotions[0] }) => (
-    <Animated.View 
-      entering={FadeInRight} 
+  const renderPromotionItem = ({ item }: { item: (typeof promotions)[0] }) => (
+    <Animated.View
+      entering={FadeInRight}
       exiting={FadeOutLeft}
       style={styles.promotionCardContainer}
     >
-      <TouchableOpacity 
+      <TouchableOpacity
         style={[
-          styles.promotionCard, 
-          { backgroundColor: item.backgroundColor }
+          styles.promotionCard,
+          { backgroundColor: item.backgroundColor },
         ]}
       >
         <View style={styles.promotionContent}>
           <View>
             <Text style={styles.promotionLabel}>Limited Time Offer</Text>
             <Text style={styles.promotionTitle}>{item.title}</Text>
-            <Text style={styles.promotionDiscount}>FLAT {item.discount} OFF</Text>
+            <Text style={styles.promotionDiscount}>
+              FLAT {item.discount} OFF
+            </Text>
             <Text style={styles.promotionDescription}>{item.description}</Text>
-            <Text style={styles.promotionValidity}>Valid until {item.validUntil}</Text>
+            <Text style={styles.promotionValidity}>
+              Valid until {item.validUntil}
+            </Text>
           </View>
           <TouchableOpacity style={styles.claimButton}>
             <Text style={styles.claimButtonText}>Claim</Text>
@@ -71,7 +81,7 @@ export default function Promotions() {
       <FlatList
         data={promotions}
         renderItem={renderPromotionItem}
-        keyExtractor={item => item.id}
+        keyExtractor={(item) => item.id}
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.promotionsList}
@@ -85,19 +95,19 @@ const styles = StyleSheet.create({
     marginVertical: 16,
   },
   headerRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: 20,
     marginBottom: 12,
   },
   sectionTitle: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: "Poppins-SemiBold",
     fontSize: 18,
     color: theme.colors.gray[900],
   },
   seeAllButton: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: "Poppins-Medium",
     fontSize: 14,
     color: theme.colors.primary,
   },
@@ -111,56 +121,56 @@ const styles = StyleSheet.create({
   },
   promotionCard: {
     borderRadius: theme.borderRadius.lg,
-    overflow: 'hidden',
-    ...theme.shadows.medium,
+    overflow: "hidden",
+    boxShadow: "0px 1px 3px rgba(0,0,0,0.1)", // ✅ New way instead of theme.shadows.medium
   },
   promotionContent: {
     padding: 16,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-end",
   },
   promotionLabel: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: "Poppins-Medium",
     fontSize: 12,
     color: theme.colors.white,
     opacity: 0.9,
     marginBottom: 4,
   },
   promotionTitle: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: "Poppins-SemiBold",
     fontSize: 18,
     color: theme.colors.white,
     marginBottom: 8,
   },
   promotionDiscount: {
-    fontFamily: 'Poppins-Bold',
+    fontFamily: "Poppins-Bold",
     fontSize: 24,
     color: theme.colors.white,
     marginBottom: 8,
   },
   promotionDescription: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: "Poppins-Regular",
     fontSize: 12,
     color: theme.colors.white,
     opacity: 0.9,
     marginBottom: 8,
   },
   promotionValidity: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: "Poppins-Regular",
     fontSize: 10,
     color: theme.colors.white,
     opacity: 0.7,
   },
   claimButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: theme.borderRadius.full,
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
   },
   claimButtonText: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: "Poppins-Medium",
     fontSize: 14,
     color: theme.colors.white,
   },

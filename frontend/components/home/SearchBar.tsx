@@ -1,13 +1,17 @@
-import React from 'react';
-import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
-import { Search, SlidersHorizontal } from 'lucide-react-native';
-import { theme } from '@/constants/Theme';
+import React from "react";
+import { View, TextInput, StyleSheet, TouchableOpacity } from "react-native";
+import { Search, SlidersHorizontal } from "lucide-react-native";
+import { theme } from "@/constants/Theme";
 
 export default function SearchBar() {
   return (
     <View style={styles.container}>
       <View style={styles.searchContainer}>
-        <Search size={20} color={theme.colors.gray[500]} style={styles.searchIcon} />
+        <Search
+          size={20}
+          color={theme.colors.gray[500]}
+          style={styles.searchIcon}
+        />
         <TextInput
           style={styles.input}
           placeholder="Search services, providers..."
@@ -23,25 +27,25 @@ export default function SearchBar() {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   searchContainer: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: theme.colors.white,
     borderRadius: theme.borderRadius.lg,
     paddingHorizontal: 16,
     height: 48,
-    ...theme.shadows.small,
+    boxShadow: "0px 1px 3px rgba(0,0,0,0.1)", // 👈 NEW
   },
   searchIcon: {
     marginRight: 8,
   },
   input: {
     flex: 1,
-    fontFamily: 'Poppins-Regular',
+    fontFamily: "Poppins-Regular",
     fontSize: 14,
     color: theme.colors.gray[900],
   },
@@ -51,8 +55,8 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: theme.borderRadius.lg,
-    justifyContent: 'center',
-    alignItems: 'center',
-    ...theme.shadows.small,
+    justifyContent: "center",
+    alignItems: "center",
+    boxShadow: "0px 1px 3px rgba(0,0,0,0.1)", // 👈 NEW
   },
 });

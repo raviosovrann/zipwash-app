@@ -1,8 +1,8 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import { theme } from '@/constants/Theme';
-import { Calendar, Clock, MapPin } from 'lucide-react-native';
-import Animated, { FadeInUp } from 'react-native-reanimated';
+import React from "react";
+import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { theme } from "@/constants/Theme";
+import { Calendar, Clock } from "lucide-react-native";
+import Animated, { FadeInUp } from "react-native-reanimated";
 
 interface BookingCardProps {
   booking: {
@@ -11,7 +11,7 @@ interface BookingCardProps {
     providerName: string;
     date: string;
     time: string;
-    status: 'upcoming' | 'completed' | 'cancelled';
+    status: "upcoming" | "completed" | "cancelled";
     price: number;
     image: string;
   };
@@ -19,21 +19,22 @@ interface BookingCardProps {
 
 export default function BookingCard({ booking }: BookingCardProps) {
   const formatDate = (dateString: string) => {
-    const options: Intl.DateTimeFormatOptions = { weekday: 'short', month: 'short', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString('en-US', options);
+    const options: Intl.DateTimeFormatOptions = {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+    };
+    return new Date(dateString).toLocaleDateString("en-US", options);
   };
 
   return (
-    <Animated.View
-      entering={FadeInUp.duration(400)}
-      style={styles.container}
-    >
+    <Animated.View entering={FadeInUp.duration(400)} style={styles.container}>
       <TouchableOpacity style={styles.card}>
         <Image source={{ uri: booking.image }} style={styles.image} />
         <View style={styles.content}>
           <Text style={styles.serviceName}>{booking.serviceName}</Text>
           <Text style={styles.providerName}>{booking.providerName}</Text>
-          
+
           <View style={styles.detailsContainer}>
             <View style={styles.detailRow}>
               <Calendar size={16} color={theme.colors.gray[600]} />
@@ -44,16 +45,20 @@ export default function BookingCard({ booking }: BookingCardProps) {
               <Text style={styles.detailText}>{booking.time}</Text>
             </View>
           </View>
-          
+
           <View style={styles.footerRow}>
             <Text style={styles.price}>${booking.price.toFixed(2)}</Text>
-            {booking.status === 'upcoming' ? (
+            {booking.status === "upcoming" ? (
               <TouchableOpacity style={styles.actionButton}>
                 <Text style={styles.actionButtonText}>Reschedule</Text>
               </TouchableOpacity>
             ) : (
-              <TouchableOpacity style={[styles.actionButton, styles.rateButton]}>
-                <Text style={[styles.actionButtonText, styles.rateButtonText]}>Rate</Text>
+              <TouchableOpacity
+                style={[styles.actionButton, styles.rateButton]}
+              >
+                <Text style={[styles.actionButtonText, styles.rateButtonText]}>
+                  Rate
+                </Text>
               </TouchableOpacity>
             )}
           </View>
@@ -70,25 +75,25 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: theme.colors.white,
     borderRadius: theme.borderRadius.lg,
-    overflow: 'hidden',
-    ...theme.shadows.small,
+    overflow: "hidden",
+    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)", // <-- fixed shadow warning
   },
   image: {
-    width: '100%',
+    width: "100%",
     height: 120,
-    resizeMode: 'cover',
+    resizeMode: "cover",
   },
   content: {
     padding: 16,
   },
   serviceName: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: "Poppins-SemiBold",
     fontSize: 18,
     color: theme.colors.gray[900],
     marginBottom: 4,
   },
   providerName: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: "Poppins-Regular",
     fontSize: 14,
     color: theme.colors.gray[600],
     marginBottom: 12,
@@ -97,23 +102,23 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   detailRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 8,
   },
   detailText: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: "Poppins-Regular",
     fontSize: 14,
     color: theme.colors.gray[700],
     marginLeft: 8,
   },
   footerRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   price: {
-    fontFamily: 'Poppins-Bold',
+    fontFamily: "Poppins-Bold",
     fontSize: 18,
     color: theme.colors.primary,
   },
@@ -124,7 +129,7 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.full,
   },
   actionButtonText: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: "Poppins-Medium",
     fontSize: 14,
     color: theme.colors.white,
   },

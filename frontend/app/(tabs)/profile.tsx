@@ -1,26 +1,44 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
-import { User, Car, CreditCard, Bell, Settings, HelpCircle, LogOut } from 'lucide-react-native';
+import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
+import {
+  User,
+  Car,
+  CreditCard,
+  Bell,
+  Settings,
+  HelpCircle,
+  LogOut,
+} from "lucide-react-native";
 
-import { theme } from '@/constants/Theme';
-import ProfileMenuItem from '@/components/profile/ProfileMenuItem';
+import { theme } from "@/constants/Theme";
+import ProfileMenuItem from "@/components/profile/ProfileMenuItem";
 
 export default function ProfileScreen() {
   return (
-    <SafeAreaView style={styles.container} edges={['right', 'left']}>
+    <SafeAreaView style={styles.container} edges={["right", "left"]}>
       <LinearGradient
         colors={[theme.colors.primary, theme.colors.primaryDark]}
-        style={styles.header}>
+        style={styles.header}
+      >
         <Text style={styles.title}>Profile</Text>
       </LinearGradient>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.profileCard}>
-          <Image 
-            source={{ uri: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=800' }} 
-            style={styles.profileImage} 
+          <Image
+            source={{
+              uri: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=800",
+            }}
+            style={styles.profileImage}
           />
           <View style={styles.profileInfo}>
             <Text style={styles.name}>John Smith</Text>
@@ -33,44 +51,40 @@ export default function ProfileScreen() {
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Account</Text>
-          <ProfileMenuItem 
-            icon={User} 
-            title="Personal Information" 
-            onPress={() => {}} 
+          <ProfileMenuItem
+            icon={User}
+            title="Personal Information"
+            onPress={() => {}}
           />
-          <ProfileMenuItem 
-            icon={Car} 
-            title="My Vehicles" 
-            onPress={() => {}} 
+          <ProfileMenuItem icon={Car} title="My Vehicles" onPress={() => {}} />
+          <ProfileMenuItem
+            icon={CreditCard}
+            title="Payment Methods"
+            onPress={() => {}}
           />
-          <ProfileMenuItem 
-            icon={CreditCard} 
-            title="Payment Methods" 
-            onPress={() => {}} 
-          />
-          <ProfileMenuItem 
-            icon={Bell} 
-            title="Notifications" 
-            onPress={() => {}} 
+          <ProfileMenuItem
+            icon={Bell}
+            title="Notifications"
+            onPress={() => {}}
           />
         </View>
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Other</Text>
-          <ProfileMenuItem 
-            icon={Settings} 
-            title="Settings" 
-            onPress={() => {}} 
+          <ProfileMenuItem
+            icon={Settings}
+            title="Settings"
+            onPress={() => {}}
           />
-          <ProfileMenuItem 
-            icon={HelpCircle} 
-            title="Help & Support" 
-            onPress={() => {}} 
+          <ProfileMenuItem
+            icon={HelpCircle}
+            title="Help & Support"
+            onPress={() => {}}
           />
-          <ProfileMenuItem 
-            icon={LogOut} 
-            title="Log Out" 
-            onPress={() => {}} 
+          <ProfileMenuItem
+            icon={LogOut}
+            title="Log Out"
+            onPress={() => {}}
             textColor={theme.colors.error}
           />
         </View>
@@ -86,7 +100,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F9FC',
+    backgroundColor: "#F8F9FC",
   },
   header: {
     paddingTop: 20,
@@ -94,7 +108,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   title: {
-    fontFamily: 'Poppins-Bold',
+    fontFamily: "Poppins-Bold",
     fontSize: 24,
     color: theme.colors.white,
   },
@@ -107,9 +121,9 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.white,
     borderRadius: 16,
     padding: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    ...theme.shadows.medium,
+    flexDirection: "row",
+    alignItems: "center",
+    boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)", // Updated shadow style
   },
   profileImage: {
     width: 60,
@@ -121,12 +135,12 @@ const styles = StyleSheet.create({
     marginLeft: 16,
   },
   name: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: "Poppins-SemiBold",
     fontSize: 18,
     color: theme.colors.gray[900],
   },
   email: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: "Poppins-Regular",
     fontSize: 14,
     color: theme.colors.gray[600],
   },
@@ -137,7 +151,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   editButtonText: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: "Poppins-Medium",
     fontSize: 14,
     color: theme.colors.primary,
   },
@@ -145,7 +159,7 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   sectionTitle: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: "Poppins-SemiBold",
     fontSize: 18,
     color: theme.colors.gray[900],
     marginBottom: 12,
@@ -153,10 +167,10 @@ const styles = StyleSheet.create({
   versionContainer: {
     marginTop: 32,
     marginBottom: 16,
-    alignItems: 'center',
+    alignItems: "center",
   },
   versionText: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: "Poppins-Regular",
     fontSize: 14,
     color: theme.colors.gray[500],
   },

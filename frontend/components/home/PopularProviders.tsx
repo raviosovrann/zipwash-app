@@ -1,43 +1,60 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList } from 'react-native';
-import { theme } from '@/constants/Theme';
-import { Star } from 'lucide-react-native';
-import Animated, { FadeInUp } from 'react-native-reanimated';
+import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  FlatList,
+} from "react-native";
+import { theme } from "@/constants/Theme";
+import { Star } from "lucide-react-native";
+import Animated, { FadeInUp } from "react-native-reanimated";
 
 const providers = [
   {
-    id: '1',
-    name: 'Mike',
+    id: "1",
+    name: "Mike",
     rating: 4.8,
-    service: 'Engine Repair',
-    image: 'https://images.pexels.com/photos/4195342/pexels-photo-4195342.jpeg?auto=compress&cs=tinysrgb&w=800',
+    service: "Engine Repair",
+    image:
+      "https://images.pexels.com/photos/4195342/pexels-photo-4195342.jpeg?auto=compress&cs=tinysrgb&w=800",
   },
   {
-    id: '2',
-    name: 'Sophia',
+    id: "2",
+    name: "Sophia",
     rating: 4.9,
-    service: 'Mechanic',
-    image: 'https://images.pexels.com/photos/8961251/pexels-photo-8961251.jpeg?auto=compress&cs=tinysrgb&w=800',
+    service: "Mechanic",
+    image:
+      "https://images.pexels.com/photos/8961251/pexels-photo-8961251.jpeg?auto=compress&cs=tinysrgb&w=800",
   },
   {
-    id: '3',
-    name: 'Carlos',
+    id: "3",
+    name: "Carlos",
     rating: 4.6,
-    service: 'Electrician',
-    image: 'https://images.pexels.com/photos/8613089/pexels-photo-8613089.jpeg?auto=compress&cs=tinysrgb&w=800',
+    service: "Electrician",
+    image:
+      "https://images.pexels.com/photos/8613089/pexels-photo-8613089.jpeg?auto=compress&cs=tinysrgb&w=800",
   },
   {
-    id: '4',
-    name: 'Dave',
+    id: "4",
+    name: "Dave",
     rating: 4.7,
-    service: 'Car Wash',
-    image: 'https://images.pexels.com/photos/4506108/pexels-photo-4506108.jpeg?auto=compress&cs=tinysrgb&w=800',
+    service: "Car Wash",
+    image:
+      "https://images.pexels.com/photos/4506108/pexels-photo-4506108.jpeg?auto=compress&cs=tinysrgb&w=800",
   },
 ];
 
 export default function PopularProviders() {
-  const renderProviderItem = ({ item, index }: { item: typeof providers[0], index: number }) => (
-    <Animated.View 
+  const renderProviderItem = ({
+    item,
+    index,
+  }: {
+    item: (typeof providers)[0];
+    index: number;
+  }) => (
+    <Animated.View
       entering={FadeInUp.delay(index * 100)}
       style={styles.providerContainer}
     >
@@ -47,7 +64,11 @@ export default function PopularProviders() {
           <Text style={styles.providerName}>{item.name}</Text>
           <Text style={styles.providerService}>{item.service}</Text>
           <View style={styles.ratingContainer}>
-            <Star size={14} color={theme.colors.warning} fill={theme.colors.warning} />
+            <Star
+              size={14}
+              color={theme.colors.warning}
+              fill={theme.colors.warning}
+            />
             <Text style={styles.ratingText}>{item.rating}</Text>
           </View>
         </View>
@@ -67,7 +88,7 @@ export default function PopularProviders() {
       <FlatList
         data={providers}
         renderItem={renderProviderItem}
-        keyExtractor={item => item.id}
+        keyExtractor={(item) => item.id}
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.providersList}
@@ -81,19 +102,19 @@ const styles = StyleSheet.create({
     marginVertical: 16,
   },
   headerRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: 20,
     marginBottom: 16,
   },
   sectionTitle: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: "Poppins-SemiBold",
     fontSize: 18,
     color: theme.colors.gray[900],
   },
   seeAllButton: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: "Poppins-Medium",
     fontSize: 14,
     color: theme.colors.primary,
   },
@@ -106,7 +127,7 @@ const styles = StyleSheet.create({
     width: 96,
   },
   providerCard: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   providerImage: {
     width: 96,
@@ -115,28 +136,28 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     borderWidth: 2,
     borderColor: theme.colors.white,
-    ...theme.shadows.medium,
+    boxShadow: "0px 4px 6px rgba(0,0,0,0.1)", // Updated shadow style
   },
   providerInfo: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   providerName: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: "Poppins-SemiBold",
     fontSize: 16,
     color: theme.colors.gray[900],
   },
   providerService: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: "Poppins-Regular",
     fontSize: 12,
     color: theme.colors.gray[600],
     marginBottom: 4,
   },
   ratingContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   ratingText: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: "Poppins-Medium",
     fontSize: 12,
     color: theme.colors.gray[800],
     marginLeft: 4,

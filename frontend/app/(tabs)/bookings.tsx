@@ -1,80 +1,123 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Clock, CheckCircle } from 'lucide-react-native';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
+import { Clock, CheckCircle } from "lucide-react-native";
 
-import { theme } from '@/constants/Theme';
-import BookingCard from '@/components/bookings/BookingCard';
+import { theme } from "@/constants/Theme";
+import BookingCard from "@/components/bookings/BookingCard";
 
 const mockBookings = [
   {
-    id: '1',
-    serviceName: 'Oil Change',
-    providerName: 'QuickLube Masters',
-    date: '2025-06-15',
-    time: '10:30 AM',
-    status: 'upcoming',
+    id: "1",
+    serviceName: "Oil Change",
+    providerName: "QuickLube Masters",
+    date: "2025-06-15",
+    time: "10:30 AM",
+    status: "upcoming",
     price: 49.99,
-    image: 'https://images.pexels.com/photos/3807329/pexels-photo-3807329.jpeg?auto=compress&cs=tinysrgb&w=800',
+    image:
+      "https://images.pexels.com/photos/3807329/pexels-photo-3807329.jpeg?auto=compress&cs=tinysrgb&w=800",
   },
   {
-    id: '2',
-    serviceName: 'Tire Rotation',
-    providerName: 'Wheel Experts',
-    date: '2025-06-21',
-    time: '2:00 PM',
-    status: 'upcoming',
+    id: "2",
+    serviceName: "Tire Rotation",
+    providerName: "Wheel Experts",
+    date: "2025-06-21",
+    time: "2:00 PM",
+    status: "upcoming",
     price: 39.99,
-    image: 'https://images.pexels.com/photos/3806249/pexels-photo-3806249.jpeg?auto=compress&cs=tinysrgb&w=800',
+    image:
+      "https://images.pexels.com/photos/3806249/pexels-photo-3806249.jpeg?auto=compress&cs=tinysrgb&w=800",
   },
   {
-    id: '3',
-    serviceName: 'Battery Replacement',
-    providerName: 'Power Cell Center',
-    date: '2025-05-28',
-    time: '11:15 AM',
-    status: 'completed',
+    id: "3",
+    serviceName: "Battery Replacement",
+    providerName: "Power Cell Center",
+    date: "2025-05-28",
+    time: "11:15 AM",
+    status: "completed",
     price: 129.99,
-    image: 'https://images.pexels.com/photos/13009437/pexels-photo-13009437.jpeg?auto=compress&cs=tinysrgb&w=800',
+    image:
+      "https://images.pexels.com/photos/13009437/pexels-photo-13009437.jpeg?auto=compress&cs=tinysrgb&w=800",
   },
   {
-    id: '4',
-    serviceName: 'Engine Diagnostics',
-    providerName: 'AutoTech Pros',
-    date: '2025-05-20',
-    time: '9:45 AM',
-    status: 'completed',
+    id: "4",
+    serviceName: "Engine Diagnostics",
+    providerName: "AutoTech Pros",
+    date: "2025-05-20",
+    time: "9:45 AM",
+    status: "completed",
     price: 89.99,
-    image: 'https://images.pexels.com/photos/4489794/pexels-photo-4489794.jpeg?auto=compress&cs=tinysrgb&w=800',
+    image:
+      "https://images.pexels.com/photos/4489794/pexels-photo-4489794.jpeg?auto=compress&cs=tinysrgb&w=800",
   },
 ];
 
 export default function BookingsScreen() {
-  const [activeTab, setActiveTab] = useState('upcoming');
-  
-  const filteredBookings = mockBookings.filter(booking => booking.status === activeTab);
+  const [activeTab, setActiveTab] = useState("upcoming");
+
+  const filteredBookings = mockBookings.filter(
+    (booking) => booking.status === activeTab
+  );
 
   return (
-    <SafeAreaView style={styles.container} edges={['right', 'left']}>
+    <SafeAreaView style={styles.container} edges={["right", "left"]}>
       <LinearGradient
         colors={[theme.colors.primary, theme.colors.primaryDark]}
-        style={styles.header}>
+        style={styles.header}
+      >
         <Text style={styles.title}>My Bookings</Text>
       </LinearGradient>
 
       <View style={styles.tabs}>
         <TouchableOpacity
-          style={[styles.tab, activeTab === 'upcoming' && styles.activeTab]}
-          onPress={() => setActiveTab('upcoming')}>
-          <Clock size={18} color={activeTab === 'upcoming' ? theme.colors.primary : theme.colors.gray[500]} />
-          <Text style={[styles.tabText, activeTab === 'upcoming' && styles.activeTabText]}>Upcoming</Text>
+          style={[styles.tab, activeTab === "upcoming" && styles.activeTab]}
+          onPress={() => setActiveTab("upcoming")}
+        >
+          <Clock
+            size={18}
+            color={
+              activeTab === "upcoming"
+                ? theme.colors.primary
+                : theme.colors.gray[500]
+            }
+          />
+          <Text
+            style={[
+              styles.tabText,
+              activeTab === "upcoming" && styles.activeTabText,
+            ]}
+          >
+            Upcoming
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.tab, activeTab === 'completed' && styles.activeTab]}
-          onPress={() => setActiveTab('completed')}>
-          <CheckCircle size={18} color={activeTab === 'completed' ? theme.colors.primary : theme.colors.gray[500]} />
-          <Text style={[styles.tabText, activeTab === 'completed' && styles.activeTabText]}>Completed</Text>
+          style={[styles.tab, activeTab === "completed" && styles.activeTab]}
+          onPress={() => setActiveTab("completed")}
+        >
+          <CheckCircle
+            size={18}
+            color={
+              activeTab === "completed"
+                ? theme.colors.primary
+                : theme.colors.gray[500]
+            }
+          />
+          <Text
+            style={[
+              styles.tabText,
+              activeTab === "completed" && styles.activeTabText,
+            ]}
+          >
+            Completed
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -85,7 +128,7 @@ export default function BookingsScreen() {
           <BookingCard
             booking={{
               ...item,
-              status: item.status as "upcoming" | "completed" | "cancelled"
+              status: item.status as "upcoming" | "completed" | "cancelled",
             }}
           />
         )}
@@ -97,7 +140,7 @@ export default function BookingsScreen() {
         style={styles.bookingsContainer}
         contentContainerStyle={[
           styles.bookingsContent,
-          filteredBookings.length === 0 && styles.emptyStateContainer
+          filteredBookings.length === 0 && styles.emptyStateContainer,
         ]}
         showsVerticalScrollIndicator={false}
       />
@@ -108,7 +151,7 @@ export default function BookingsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F9FC',
+    backgroundColor: "#F8F9FC",
   },
   header: {
     paddingTop: 20,
@@ -116,19 +159,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   title: {
-    fontFamily: 'Poppins-Bold',
+    fontFamily: "Poppins-Bold",
     fontSize: 24,
     color: theme.colors.white,
   },
   tabs: {
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingHorizontal: 20,
     marginTop: 16,
     marginBottom: 8,
   },
   tab: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingVertical: 8,
     paddingHorizontal: 16,
     marginRight: 16,
@@ -142,7 +185,7 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.primary,
   },
   tabText: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: "Poppins-Medium",
     fontSize: 14,
     color: theme.colors.gray[700],
     marginLeft: 8,
@@ -160,17 +203,17 @@ const styles = StyleSheet.create({
   },
   emptyState: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: 100,
   },
   emptyStateText: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: "Poppins-Medium",
     fontSize: 16,
     color: theme.colors.gray[500],
   },
   emptyStateContainer: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
 });
