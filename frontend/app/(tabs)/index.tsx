@@ -1,25 +1,25 @@
-import React from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React from "react";
+import { View, StyleSheet, FlatList } from "react-native";
+import { StatusBar } from "expo-status-bar";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-import Header from '@/components/home/Header';
-import SearchBar from '@/components/home/SearchBar';
-import Promotions from '@/components/home/Promotions';
-import ServiceCategories from '@/components/home/ServiceCategories';
-import PopularProviders from '@/components/home/PopularProviders';
+import Header from "@/components/home/Header";
+import SearchBar from "@/components/home/SearchBar";
+import Promotions from "@/components/home/Promotions";
+import ServiceCategories from "@/components/home/ServiceCategories";
+import PopularProviders from "@/components/home/PopularProviders";
 
 export default function HomeScreen() {
   // Create a dummy data array with one item to render our content
-  const dummyData = [{ id: 'main-content' }];
+  const dummyData = [{ id: "main-content" }];
 
   return (
-    <SafeAreaView style={styles.container} edges={['right', 'left']}>
+    <SafeAreaView style={styles.container} edges={["right", "left"]}>
       <StatusBar style="light" />
       <Header />
       <FlatList
         data={dummyData}
-        keyExtractor={item => item.id}
+        keyExtractor={(item) => item.id}
         renderItem={() => (
           <View>
             <ServiceCategories />
@@ -45,7 +45,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F9FC',
+    backgroundColor: "#F8F9FC",
   },
   scrollView: {
     flex: 1,
