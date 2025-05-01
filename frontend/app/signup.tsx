@@ -16,15 +16,32 @@ import { LinearGradient } from "expo-linear-gradient";
 import { ArrowLeft } from "lucide-react-native";
 
 export default function Signup() {
-  const { login } = useAuth();
+  const { login, signup } = useAuth();
   const router = useRouter();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSignup = () => {
-    login();
-    router.replace("/(tabs)");
+  // Update the handleSignup function in your existing file:
+
+  const handleSignup = async () => {
+    if (!fullName || !email || !password) {
+      // Add validation UI feedback here
+      return;
+    }
+    
+    // Split fullName into firstName and lastName
+    const nameParts = fullName.split(" ");
+    const firstName = nameParts[0];
+    const lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
+    
+    const success = await signup(firstName, lastName, email, password);
+    if (success) {
+      router.replace("/(tabs)");
+    } else {
+      // Show error message to user
+      alert("Signup failed. This email might already be registered.");
+    }
   };
 
   return (
