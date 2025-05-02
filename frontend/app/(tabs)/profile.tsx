@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
 import {
   User,
   Car,
@@ -21,8 +22,18 @@ import {
 
 import { theme } from "@/constants/Theme";
 import ProfileMenuItem from "@/components/profile/ProfileMenuItem";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function ProfileScreen() {
+  const { logout } = useAuth();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await logout();
+    // After logout, redirect to intro screen
+    router.replace("/intro");
+  };
+
   return (
     <SafeAreaView style={styles.container} edges={["right", "left"]}>
       <LinearGradient
@@ -84,7 +95,7 @@ export default function ProfileScreen() {
           <ProfileMenuItem
             icon={LogOut}
             title="Log Out"
-            onPress={() => {}}
+            onPress={handleLogout}
             textColor={theme.colors.error}
           />
         </View>

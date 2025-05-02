@@ -1,35 +1,11 @@
-// import { createContext, useState, useContext } from "react";
-
-// type AuthContextType = {
-//   isAuthenticated: boolean;
-//   login: () => void;
-//   logout: () => void;
-// };
-
-// const AuthContext = createContext<AuthContextType>(null!);
-
-// export function AuthProvider({ children }: { children: React.ReactNode }) {
-//   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-//   const login = () => setIsAuthenticated(true);
-//   const logout = () => setIsAuthenticated(false);
-
-//   return (
-//     <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
-//       {children}
-//     </AuthContext.Provider>
-//   );
-// }
-
-// export function useAuth() {
-//   return useContext(AuthContext);
-// }
-
 import { createContext, useState, useContext, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {Platform} from "react-native";
 
 // Define the API base URL - adjust for your development environment
-const API_URL = "http://localhost:8000/api";
+const API_URL = Platform.OS === 'web' 
+  ? "http://localhost:8000/api"  // For web browser
+  : "http://192.168.1.166:8000/api";  // For mobile devices
 
 type AuthContextType = {
   isAuthenticated: boolean;
@@ -65,26 +41,58 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     loadToken();
   }, []);
 
+  // const login = async (email: string, password: string) => {
+  //   try {
+  //     const response = await fetch(`${API_URL}/auth/login`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ email, password }),
+  //     });
+
+  //     if (!response.ok) {
+  //       console.error("Login failed:", await response.text());
+  //       return false;
+  //     }
+
+  //     const data = await response.json();
+  //     setToken(data.access_token);
+  //     setIsAuthenticated(true);
+  //     await AsyncStorage.setItem("auth_token", data.access_token);
+  //     return true;
+  //   } catch (error) {
+  //     console.error("Login error:", error);
+  //     return false;
+  //   }
+  // };
+
   const login = async (email: string, password: string) => {
     try {
+      console.log(`Attempting to login at ${API_URL}/auth/login`);
+      
       const response = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-
+  
+      // Log full response for debugging
+      console.log("Response status:", response.status);
+      const responseText = await response.text();
+      console.log("Response body:", responseText);
+      
       if (!response.ok) {
-        console.error("Login failed:", await response.text());
+        console.error("Login failed:", responseText);
         return false;
       }
-
-      const data = await response.json();
+  
+      // Parse the response text as JSON
+      const data = JSON.parse(responseText);
       setToken(data.access_token);
       setIsAuthenticated(true);
       await AsyncStorage.setItem("auth_token", data.access_token);
       return true;
     } catch (error) {
-      console.error("Login error:", error);
+      console.error("Login error details:", error);
       return false;
     }
   };
