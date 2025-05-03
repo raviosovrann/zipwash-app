@@ -47,11 +47,11 @@ function RootLayoutNav() {
   return (
     <>
       <Stack screenOptions={{ headerShown: false }}>
-        {isAuthenticated ? (
-          <>
-            <Stack.Screen name="(tabs)" />
-            <Stack.Screen name="+not-found" />
-          </>
+        {/* {isAuthenticated ? (
+          <> */}
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="+not-found" />
+        {/* </>
         ) : (
           <>
             <Stack.Screen name="index" redirect={isAuthenticated} />
@@ -59,7 +59,7 @@ function RootLayoutNav() {
             <Stack.Screen name="login" />
             <Stack.Screen name="signup" />
           </>
-        )}
+        )} */}
 
         <StatusBar style="dark" />
       </Stack>
