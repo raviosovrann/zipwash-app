@@ -69,6 +69,13 @@ export default function IntroScreen() {
             Sign In
           </Link>
         </View>
+
+        <View style={styles.vendorContainer}>
+          <Text style={styles.vendorText}>Are you a vendor? </Text>
+          <Link href="/vendor_tabs" style={styles.vendorLink}>
+            Access Portal
+          </Link>
+        </View>
       </View>
 
       {/* Bottom indicator */}
@@ -80,6 +87,29 @@ export default function IntroScreen() {
 }
 
 const styles = StyleSheet.create({
+  authLinksContainer: {
+    alignItems: "center",
+    marginTop: 8,
+  },
+  signInContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  vendorContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  vendorText: {
+    fontFamily: "Poppins-Regular",
+    fontSize: 14,
+    color: "#333",
+  },
+  vendorLink: {
+    fontFamily: "Poppins-Medium",
+    fontSize: 14,
+    color: "#7C4DFF",
+  },
   container: {
     flex: 1,
     backgroundColor: "white",
@@ -161,10 +191,6 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-Medium",
     fontSize: 16,
     color: "white",
-  },
-  signInContainer: {
-    flexDirection: "row",
-    alignItems: "center",
   },
   accountText: {
     fontFamily: "Poppins-Regular",
