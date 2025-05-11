@@ -12,15 +12,15 @@ app = FastAPI(title="ZipWash API")
 # Configure CORS to allow requests from your frontend
 app.add_middleware(
     CORSMiddleware,
-    # Specify actual origins instead of wildcard
-    allow_origins=["*"],
-    allow_credentials=False,
+    allow_origins=["http://localhost:8081", "http://localhost:3000", "http://localhost:19006"],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 # Include routers
-app.include_router(auth.router, prefix="/api/auth", tags=["authentication"])
+# Use /auth prefix to match frontend URLs
+app.include_router(auth.router, prefix="/auth", tags=["authentication"])
 
 @app.get("/")
 def read_root():

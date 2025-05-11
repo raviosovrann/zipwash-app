@@ -1,29 +1,17 @@
-from sqlalchemy import Boolean, Column, Integer, String, DateTime
-from sqlalchemy.sql import func
-from app.core.database import Base
+from sqlalchemy import Column, Integer, String, DateTime, func
+from sqlalchemy.ext.declarative import declarative_base
+
+Base = declarative_base()
 
 class User(Base):
-    __tablename__ = "users"  # Table name in the database
-
-    # Primary key column with auto-incrementation
+    __tablename__ = "users"
+    
     user_id = Column(Integer, primary_key=True, index=True)
-    
-    # User's name fields
-    first_name = Column(String)
-    last_name = Column(String)
-    
-    # Email column that must be unique and has an index
-    email = Column(String, unique=True, index=True)
-    
-    # Stores the hashed password
-    password = Column(String)
-    
-    # Phone number
-    phone_number = Column(String)
-    
-    # User type (customer/vendor)
-    user_type = Column(String)
-    
-    # Timestamps
-    created_at = Column(DateTime, default=func.now())
-    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
+    first_name = Column(String(255), nullable=False)
+    last_name = Column(String(255), nullable=False)
+    email = Column(String(255), unique=True, nullable=False, index=True)
+    password = Column(String(255), nullable=False)
+    phone_number = Column(String(20), nullable=True)
+    # Removed user_type as it doesn't exist in the database
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())

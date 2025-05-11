@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     API_PREFIX: str = "/api"
     
     # Database settings
-    DATABASE_URL: str = os.getenv("DATABASE_URL", "postgresql://zipwash_admin:zipwashadmin2025!@localhost/zipwash_db")
+    DATABASE_URL: str = os.getenv("DATABASE_URL", "postgresql://zipwash_admin:zipwashadmin2025@localhost/zipwash_db")
     
     # CORS settings - controls which origins can access the API
     BACKEND_CORS_ORIGINS: list[str] = ["*"]  # For development only, restrict in production

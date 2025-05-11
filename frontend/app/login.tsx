@@ -14,23 +14,52 @@ import { Link, useRouter } from "expo-router";
 import { useAuth } from "@/contexts/AuthContext";
 import { LinearGradient } from "expo-linear-gradient";
 import { ArrowLeft } from "lucide-react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Login() {
   const { login } = useAuth();
   const router = useRouter();
+  const [accountType, setAccountType] = useState("user"); // "user" or "vendor"
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [companyEmail, setCompanyEmail] = useState("");
+  const [userPassword, setUserPassword] = useState("");
+  const [vendorPassword, setVendorPassword] = useState("");
+  
+  const handleAccountTypeChange = (type: "user" | "vendor") => {
+    setAccountType(type);
+  };
 
   const handleLogin = async () => {
-    // if (!email || !password) {
-    //   return;
-    // }
-
-    const success = await login(email, password);
-    if (true) {
-      router.replace("/(tabs)");
+    let success;
+    
+    if (accountType === "vendor") {
+      if (!companyEmail || !vendorPassword) {
+        alert("Please enter your company email and password.");
+        return;
+      }
+      success = await login(companyEmail, vendorPassword, "vendor");
+      if (success) {
+        await AsyncStorage.setItem("account_type", "vendor");
+      }
     } else {
-      alert("Login failed. Please check your email and password.");
+      if (!email || !userPassword) {
+        alert("Please enter your email and password.");
+        return;
+      }
+      success = await login(email, userPassword, "user");
+      if (success) {
+        await AsyncStorage.setItem("account_type", "user");
+      }
+    }
+    
+    if (success) {
+      if (accountType === 'vendor') {
+        router.replace("/vendor_tabs/vendor-home");
+      } else {
+        router.replace("/user_tabs");
+      }
+    } else {
+      alert("Login failed. Please check your credentials.");
     }
   };
 
@@ -60,29 +89,80 @@ export default function Login() {
           <Text style={styles.subtitle}>Please sign in to continue</Text>
 
           <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Email</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="example@email.com"
-              placeholderTextColor="#AAAAAA"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              value={email}
-              onChangeText={setEmail}
-            />
+            <Text style={styles.inputLabel}>Account Type</Text>
+            <View style={styles.segmentedControl}>
+              <TouchableOpacity
+                style={[styles.segmentedControlItem, accountType === 'user' && styles.activeSegment]}
+                onPress={() => handleAccountTypeChange('user')}
+              >
+                <Text style={[styles.segmentedControlText, accountType === 'user' && styles.activeSegmentText]}>User</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.segmentedControlItem, accountType === 'vendor' && styles.activeSegment]}
+                onPress={() => handleAccountTypeChange('vendor')}
+              >
+                <Text style={[styles.segmentedControlText, accountType === 'vendor' && styles.activeSegmentText]}>Vendor</Text>
+              </TouchableOpacity>
+            </View>
           </View>
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Password</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter your password"
-              placeholderTextColor="#AAAAAA"
-              secureTextEntry
-              value={password}
-              onChangeText={setPassword}
-            />
-          </View>
+          {accountType === 'user' && (
+            <>
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Email</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="example@email.com"
+                  placeholderTextColor="#AAAAAA"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  value={email}
+                  onChangeText={setEmail}
+                />
+              </View>
+
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Password</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Enter your password"
+                  placeholderTextColor="#AAAAAA"
+                  secureTextEntry
+                  value={userPassword}
+                  onChangeText={setUserPassword}
+                />
+              </View>
+            </>
+          )}
+
+          {accountType === 'vendor' && (
+            <>
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Company Email</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="contact@yourbusiness.com"
+                  placeholderTextColor="#AAAAAA"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  value={companyEmail}
+                  onChangeText={setCompanyEmail}
+                />
+              </View>
+
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Password</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Enter your password"
+                  placeholderTextColor="#AAAAAA"
+                  secureTextEntry
+                  value={vendorPassword}
+                  onChangeText={setVendorPassword}
+                />
+              </View>
+            </>
+          )}
 
           <TouchableOpacity style={styles.forgotPassword}>
             <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
@@ -210,5 +290,29 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#7C4DFF",
     marginLeft: 4,
+  },
+  segmentedControl: {
+    flexDirection: "row",
+    borderWidth: 1,
+    borderColor: "#DDDDDD",
+    borderRadius: 12,
+    overflow: "hidden",
+  },
+  segmentedControlItem: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 12,
+  },
+  segmentedControlText: {
+    fontFamily: "Poppins-Medium",
+    fontSize: 14,
+    color: "#333",
+  },
+  activeSegment: {
+    backgroundColor: "#7C4DFF",
+  },
+  activeSegmentText: {
+    color: "white",
   },
 });

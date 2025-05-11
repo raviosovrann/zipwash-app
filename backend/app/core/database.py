@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 # Connection string for PostgreSQL - includes username, password, host, and database name
-SQLALCHEMY_DATABASE_URL = "postgresql://zipwash_admin:zipwashadmin2025!@localhost/zipwash_db"
+SQLALCHEMY_DATABASE_URL = "postgresql://zipwash_admin:zipwashadmin2025@localhost/zipwash_db"
 
 # Create SQLAlchemy engine to interact with the database
 engine = create_engine(SQLALCHEMY_DATABASE_URL)

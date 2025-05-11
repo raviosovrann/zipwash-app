@@ -14,30 +14,125 @@ import { Link, useRouter } from "expo-router";
 import { useAuth } from "@/contexts/AuthContext";
 import { LinearGradient } from "expo-linear-gradient";
 import { ArrowLeft } from "lucide-react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Signup() {
-  const { login, signup } = useAuth();
+  const { login, signup, vendorSignup } = useAuth();
   const router = useRouter();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [userPassword, setUserPassword] = useState("");
+  const [vendorPassword, setVendorPassword] = useState("");
 
-  // Update the handleSignup function in your existing file:
+  const [accountType, setAccountType] = useState("user"); // "user" or "vendor"
+  const [companyName, setCompanyName] = useState("");
+  const [website, setWebsite] = useState("");
+  const [companyEmail, setCompanyEmail] = useState("");
 
+  // Form validation states
+  const [errors, setErrors] = useState({
+    fullName: '',
+    email: '',
+    password: '',
+    companyName: '',
+    companyEmail: '',
+  });
+
+  const validateForm = () => {
+    let isValid = true;
+    const newErrors = {
+      fullName: '',
+      email: '',
+      password: '',
+      companyName: '',
+      companyEmail: '',
+    };
+
+    // Basic validation
+    if (!fullName) {
+      newErrors.fullName = 'Full name is required';
+      isValid = false;
+    }
+
+    if (!email) {
+      newErrors.email = 'Email is required';
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = 'Email is invalid';
+      isValid = false;
+    }
+
+    // Check password based on account type
+    const currentPassword = accountType === 'user' ? userPassword : vendorPassword;
+    
+    if (!currentPassword) {
+      newErrors.password = 'Password is required';
+      isValid = false;
+    } else if (currentPassword.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+      isValid = false;
+    }
+
+    // Vendor specific validation
+    if (accountType === 'vendor') {
+      if (!companyName) {
+        newErrors.companyName = 'Company name is required';
+        isValid = false;
+      }
+      
+      if (!companyEmail) {
+        newErrors.companyEmail = 'Company email is required';
+        isValid = false;
+      } else if (!/\S+@\S+\.\S+/.test(companyEmail)) {
+        newErrors.companyEmail = 'Company email is invalid';
+        isValid = false;
+      }
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  // Update the handleSignup function
   const handleSignup = async () => {
-    if (!fullName || !email || !password) {
-      // Add validation UI feedback here
+    if (!validateForm()) {
       return;
     }
     
-    // Split fullName into firstName and lastName
-    const nameParts = fullName.split(" ");
-    const firstName = nameParts[0];
-    const lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
+    let success;
     
-    const success = await signup(firstName, lastName, email, password);
+    if (accountType === 'vendor') {
+      // Call vendor signup function
+      success = await vendorSignup(
+        companyName,
+        companyEmail,
+        vendorPassword,
+        website
+      );
+    } else {
+      // Call user signup function
+      const nameParts = fullName.split(" ");
+      const firstName = nameParts[0];
+      const lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
+      
+      success = await signup(
+        firstName,
+        lastName,
+        email,
+        userPassword
+      );
+    }
+    
     if (success) {
-      router.replace("/(tabs)");
+      // Store account type for future use
+      await AsyncStorage.setItem("account_type", accountType);
+      
+      // Navigate to the appropriate tabs
+      if (accountType === 'vendor') {
+        router.replace("/vendor_tabs/vendor-home");
+      } else {
+        router.replace("/user_tabs");
+      }
     } else {
       // Show error message to user
       alert("Signup failed. This email might already be registered.");
@@ -70,40 +165,121 @@ export default function Signup() {
           <Text style={styles.subtitle}>Create an account to continue</Text>
 
           <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Full Name</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="John Doe"
-              placeholderTextColor="#AAAAAA"
-              value={fullName}
-              onChangeText={setFullName}
-            />
+            <Text style={styles.inputLabel}>Account Type</Text>
+            <View style={styles.segmentedControl}>
+              <TouchableOpacity
+                style={[styles.segmentedControlItem, accountType === 'user' && styles.activeSegment]}
+                onPress={() => setAccountType('user')}
+              >
+                <Text style={[styles.segmentedControlText, accountType === 'user' && styles.activeSegmentText]}>User</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.segmentedControlItem, accountType === 'vendor' && styles.activeSegment]}
+                onPress={() => setAccountType('vendor')}
+              >
+                <Text style={[styles.segmentedControlText, accountType === 'vendor' && styles.activeSegmentText]}>Vendor</Text>
+              </TouchableOpacity>
+            </View>
           </View>
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Email</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="example@email.com"
-              placeholderTextColor="#AAAAAA"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              value={email}
-              onChangeText={setEmail}
-            />
-          </View>
+          {/* User signup form */}
+          {accountType === 'user' && (
+            <>
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Full Name</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="John Doe"
+                  placeholderTextColor="#AAAAAA"
+                  value={fullName}
+                  onChangeText={setFullName}
+                />
+                {errors.fullName ? <Text style={styles.errorText}>{errors.fullName}</Text> : null}
+              </View>
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Password</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Create a password"
-              placeholderTextColor="#AAAAAA"
-              secureTextEntry
-              value={password}
-              onChangeText={setPassword}
-            />
-          </View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Email</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="example@email.com"
+                  placeholderTextColor="#AAAAAA"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  value={email}
+                  onChangeText={setEmail}
+                />
+                {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
+              </View>
+
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Password</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Create a password"
+                  placeholderTextColor="#AAAAAA"
+                  secureTextEntry
+                  value={userPassword}
+                  onChangeText={setUserPassword}
+                />
+                {errors.password ? <Text style={styles.errorText}>{errors.password}</Text> : null}
+              </View>
+            </>
+          )}
+
+          {/* Vendor signup form */}
+          {accountType === 'vendor' && (
+            <>
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Company Name</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Your Company Name"
+                  placeholderTextColor="#AAAAAA"
+                  value={companyName}
+                  onChangeText={setCompanyName}
+                />
+                {errors.companyName ? <Text style={styles.errorText}>{errors.companyName}</Text> : null}
+              </View>
+
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Website</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="https://yourbusiness.com"
+                  placeholderTextColor="#AAAAAA"
+                  value={website}
+                  onChangeText={setWebsite}
+                />
+              </View>
+
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Company Email</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="contact@yourbusiness.com"
+                  placeholderTextColor="#AAAAAA"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  value={companyEmail}
+                  onChangeText={setCompanyEmail}
+                />
+                {errors.companyEmail ? <Text style={styles.errorText}>{errors.companyEmail}</Text> : null}
+              </View>
+
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Password</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Create a password"
+                  placeholderTextColor="#AAAAAA"
+                  secureTextEntry
+                  value={vendorPassword}
+                  onChangeText={setVendorPassword}
+                />
+                {errors.password ? <Text style={styles.errorText}>{errors.password}</Text> : null}
+              </View>
+            </>
+          )}
 
           <View style={styles.termsContainer}>
             <Text style={styles.termsText}>
@@ -239,5 +415,35 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#7C4DFF",
     marginLeft: 4,
+  },
+  segmentedControl: {
+    flexDirection: "row",
+    borderWidth: 1,
+    borderColor: "#DDDDDD",
+    borderRadius: 12,
+    overflow: "hidden",
+  },
+  segmentedControlItem: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 12,
+  },
+  segmentedControlText: {
+    fontFamily: "Poppins-Medium",
+    fontSize: 14,
+    color: "#333",
+  },
+  activeSegment: {
+    backgroundColor: "#7C4DFF",
+  },
+  activeSegmentText: {
+    color: "white",
+  },
+  errorText: {
+    color: "red",
+    fontSize: 12,
+    marginTop: 4,
+    fontFamily: "Poppins-Regular",
   },
 });

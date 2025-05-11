@@ -7,7 +7,6 @@ class UserBase(BaseModel):
     first_name: str
     last_name: str
     phone_number: Optional[str] = None  # Optional field with default value None
-    is_customer: bool = True  # Default to customer account type
 
 # Schema for user creation - extends UserBase and adds password
 class UserCreate(UserBase):
@@ -16,7 +15,6 @@ class UserCreate(UserBase):
 # Schema for returning user data - extends UserBase with DB fields
 class UserResponse(UserBase):
     user_id: int
-    user_type: str
     created_at: str
 
     class Config:
