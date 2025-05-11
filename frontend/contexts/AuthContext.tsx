@@ -2,9 +2,10 @@ import { createContext, useState, useContext, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Platform } from "react-native";
 
+// This should include the correct host and port
 const API_URL =
   Platform.OS === "web"
-    ? "http://localhost:8000"
+    ? "http://localhost:8000"  // Verify this matches your server
     : "http://192.168.1.166:8000";
 
 type AuthContextType = {
@@ -123,26 +124,51 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     phoneNumber?: string
   ) => {
     try {
+      const requestData = {
+        account_type: "vendor",
+        company_name: companyName,
+        company_email: companyEmail,
+        password,
+        website: website || null,
+        phone_number: phoneNumber || null,
+      };
+      
+      console.log("Sending vendor signup request to:", `${API_URL}/auth/signup`);
+      console.log("Request data:", JSON.stringify(requestData));
+      
       const response = await fetch(`${API_URL}/auth/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          account_type: "vendor",
-          company_name: companyName,
-          company_email: companyEmail,
-          password,
-          website: website || null,
-          phone_number: phoneNumber || null,
-        }),
+        body: JSON.stringify(requestData),
       });
 
+      console.log("Response status:", response.status);
+      
+      const responseText = await response.text();
+      console.log("Response text:", responseText);
+      
       if (!response.ok) {
-        console.error("Vendor signup failed:", await response.text());
+        console.error("Vendor signup failed with status:", response.status);
+        console.error("Error details:", responseText);
         return false;
       }
 
-      // Log in as vendor after signup
-      return await login(companyEmail, password, "vendor");
+      try {
+        if (responseText) {
+          const responseData = JSON.parse(responseText);
+          console.log("Parsed response data:", responseData);
+        } else {
+          console.log("Empty response body");
+        }
+      } catch (e) {
+        console.error("Failed to parse response as JSON:", e);
+      }
+
+      // After signup, try to login with vendor credentials
+      console.log("Attempting to login with:", companyEmail);
+      const loginSuccess = await login(companyEmail, password, "vendor");
+      console.log("Login result:", loginSuccess);
+      return loginSuccess;
     } catch (error) {
       console.error("Vendor signup error:", error);
       return false;

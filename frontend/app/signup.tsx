@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Alert,
 } from "react-native";
 import { Link, useRouter } from "expo-router";
 import { useAuth } from "@/contexts/AuthContext";
@@ -28,6 +29,7 @@ export default function Signup() {
   const [companyName, setCompanyName] = useState("");
   const [website, setWebsite] = useState("");
   const [companyEmail, setCompanyEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
 
   // Form validation states
   const [errors, setErrors] = useState({
@@ -46,35 +48,33 @@ export default function Signup() {
       password: '',
       companyName: '',
       companyEmail: '',
+      vendorPassword: '',
     };
 
-    // Basic validation
-    if (!fullName) {
-      newErrors.fullName = 'Full name is required';
-      isValid = false;
-    }
+    if (accountType === 'user') {
+      // User validation
+      if (!fullName) {
+        newErrors.fullName = 'Full name is required';
+        isValid = false;
+      }
 
-    if (!email) {
-      newErrors.email = 'Email is required';
-      isValid = false;
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = 'Email is invalid';
-      isValid = false;
-    }
-
-    // Check password based on account type
-    const currentPassword = accountType === 'user' ? userPassword : vendorPassword;
-    
-    if (!currentPassword) {
-      newErrors.password = 'Password is required';
-      isValid = false;
-    } else if (currentPassword.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-      isValid = false;
-    }
-
-    // Vendor specific validation
-    if (accountType === 'vendor') {
+      if (!email) {
+        newErrors.email = 'Email is required';
+        isValid = false;
+      } else if (!/\S+@\S+\.\S+/.test(email)) {
+        newErrors.email = 'Email is invalid';
+        isValid = false;
+      }
+      
+      if (!userPassword) {
+        newErrors.password = 'Password is required';
+        isValid = false;
+      } else if (userPassword.length < 6) {
+        newErrors.password = 'Password must be at least 6 characters';
+        isValid = false;
+      }
+    } else {
+      // Vendor validation - only validate vendor fields
       if (!companyName) {
         newErrors.companyName = 'Company name is required';
         isValid = false;
@@ -87,6 +87,14 @@ export default function Signup() {
         newErrors.companyEmail = 'Company email is invalid';
         isValid = false;
       }
+      
+      if (!vendorPassword) {
+        newErrors.vendorPassword = 'Password is required';
+        isValid = false;
+      } else if (vendorPassword.length < 6) {
+        newErrors.vendorPassword = 'Password must be at least 6 characters';
+        isValid = false;
+      }
     }
 
     setErrors(newErrors);
@@ -96,46 +104,62 @@ export default function Signup() {
   // Update the handleSignup function
   const handleSignup = async () => {
     if (!validateForm()) {
+      // Form validation failed
       return;
     }
-    
-    let success;
-    
-    if (accountType === 'vendor') {
-      // Call vendor signup function
-      success = await vendorSignup(
-        companyName,
-        companyEmail,
-        vendorPassword,
-        website
-      );
-    } else {
-      // Call user signup function
-      const nameParts = fullName.split(" ");
-      const firstName = nameParts[0];
-      const lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
-      
-      success = await signup(
-        firstName,
-        lastName,
-        email,
-        userPassword
-      );
-    }
-    
-    if (success) {
-      // Store account type for future use
-      await AsyncStorage.setItem("account_type", accountType);
-      
-      // Navigate to the appropriate tabs
-      if (accountType === 'vendor') {
-        router.replace("/vendor_tabs/vendor-home");
+
+    try {
+      let success = false;
+
+      if (accountType === 'user') {
+        // Handle user signup
+        const names = fullName.split(' ');
+        const firstName = names[0] || '';
+        const lastName = names.slice(1).join(' ') || '';
+
+        success = await signup(
+          firstName,
+          lastName,
+          email,
+          userPassword,
+          phoneNumber
+        );
       } else {
-        router.replace("/user_tabs");
+        // Handle vendor signup
+        console.log("Attempting vendor signup with:", {
+          companyName,
+          companyEmail,
+          vendorPassword,
+          website,
+          phoneNumber
+        });
+        
+        success = await vendorSignup(
+          companyName,
+          companyEmail,
+          vendorPassword,
+          website,
+          phoneNumber
+        );
       }
-    } else {
-      // Show error message to user
-      alert("Signup failed. This email might already be registered.");
+
+      if (success) {
+        // Navigate to the appropriate screen based on account type
+        if (accountType === 'vendor') {
+          await AsyncStorage.setItem("account_type", "vendor");
+          router.replace("/vendor_tabs/vendor-home");
+        } else {
+          await AsyncStorage.setItem("account_type", "user");
+          router.replace("/user_tabs");
+        }
+      } else {
+        Alert.alert('Signup Failed', accountType === 'user' 
+          ? 'Failed to create user account.' 
+          : 'Failed to create vendor account.');
+      }
+    } catch (error) {
+      console.error('Signup error:', error);
+      Alert.alert('Error', 'An unexpected error occurred.');
     }
   };
 
