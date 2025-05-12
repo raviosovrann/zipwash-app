@@ -69,13 +69,6 @@ export default function IntroScreen() {
             Sign In
           </Link>
         </View>
-
-        <View style={styles.vendorContainer}>
-          <Text style={styles.vendorText}>Are you a vendor? </Text>
-          <Link href="/vendor_tabs" style={styles.vendorLink}>
-            Access Portal
-          </Link>
-        </View>
       </View>
 
       {/* Bottom indicator */}
@@ -95,20 +88,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 8,
-  },
-  vendorContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  vendorText: {
-    fontFamily: "Poppins-Regular",
-    fontSize: 14,
-    color: "#333",
-  },
-  vendorLink: {
-    fontFamily: "Poppins-Medium",
-    fontSize: 14,
-    color: "#7C4DFF",
   },
   container: {
     flex: 1,
